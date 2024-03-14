@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>WebP Converter</title>
+  </head>
+  <body>
+    <h1>Convert Image to WebP</h1>
+    <form method="post" enctype="multipart/form-data">
+      <input
+        type="file"
+        name="image"
+        id="image"
+        required
+        multiple
+        onchange="displayFileNames()"
+      />
+      <input
+        type="number"
+        name="quality"
+        placeholder="Quality (0-100)"
+        required
+        value="80"
+      />
+      <input
+        type="number"
+        name="duration"
+        placeholder="Duration (milliseconds)"
+        required
+        value="100"
+      />
+      <!-- 숨겨진 input 요소 추가 -->
+      <input type="hidden" name="fileNames" id="fileNames" />
+      <button type="submit">Convert</button>
+    </form>
+    <br />
+    <select id="fileList" size="10" style="width: 300px"></select>
+
+    <script>
+      var existingFiles = []; // 기존에 선택된 파일 목록을 추적하는 배열
+      var existingBase64 = []; // 기존에 선택된 파일 목록을 추적하는 배열
+
+      function displayFileNames() {
+        var input = document.getElementById("image");
+        var output = document.getElementById("fileList");
+        var hiddenInput = document.getElementById("fileNames");
+
+        for (var i = 0; i < input.files.length; ++i) {
+          var file = input.files.item(i);
+
+          // 파일이 기존에 추가되지 않았는지 확인
+          if (!existingFiles.includes(file.name)) {
+            var option = document.createElement("option");
+            option.textContent = file.name;
+            output.appendChild(option);
+            // 파일 목록에 추가
+            existingFiles.push(file.name);
+
+            var reader = new FileReader();
+            reader.onload = function (e) {
+              // 파일을 Base64로 인코딩한 결과
+              var base64 = e.target.result;
+              existingBase64.push(base64);
+
+              console.log(existingBase64.length);
+              hiddenInput.value = existingBase64.join("&");
+              console.log(hiddenInput.value);
+            };
+            // 파일을 읽어서 Base64로 변환
+            reader.readAsDataURL(file);
+          }
+        }
+        // existingFiles 배열을 문자열로 변환하여 숨겨진 input 요소의 값으로 설정
+      }
+    </script>
+  </body>
+</html>
