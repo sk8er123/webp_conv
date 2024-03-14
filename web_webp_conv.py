@@ -29,7 +29,7 @@ def home():
         img_byte_arr.seek(0)
 
         # 사용자에게 WebP 이미지 전송
-        return send_file(img_byte_arr, mimetype='image/webp', as_attachment=True, attachment_filename='animation.webp')
+        return send_file(img_byte_arr, mimetype='image/webp', as_attachment=True, download_name='animation.webp')
 
     return render_template('index.html')
 
